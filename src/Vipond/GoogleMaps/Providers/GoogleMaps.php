@@ -47,27 +47,29 @@ class GoogleMaps {
 
         $content = $this->getContent($query);
 
-        if (strpos($content, "Provided 'signature' is not valid for the provided client ID") !== false) {
-            return sprintf('Invalid client ID / API Key %s', $query);
+        $content = json_decode($content);
+
+        if ($content->status == 'OK') {
+            return $content->results[0];
+        } else {
+            if ( is_null($content) ) {
+                return sprintf('Could not execute query: %s', $query);
+            }
+
+            if ('REQUEST_DENIED' === $content->status && 'The provided API key is invalid.' === $content->error_message) {
+                return sprintf('API key is invalid: %s', $query);
+            }
+
+            if ('OVER_QUERY_LIMIT' === $content->status) {
+                return sprintf('Over query limit: %s', $query);
+            }
+            
+            if (strpos($content, "Provided 'signature' is not valid for the provided client ID") !== false) {
+                return sprintf('Invalid client ID / API Key %s', $query);
+            }
         }
 
-        if ( is_null($content) ) {
-            return sprintf('Could not execute query %s', $query);
-        }
-
-        if ( ! isset($json)) {
-            return sprintf('Could not execute query %s', $query);
-        }
-
-        if ('REQUEST_DENIED' === $json->status && 'The provided API key is invalid.' === $json->error_message) {
-            return sprintf('API key is invalid %s', $query);
-        }
-
-        if ('OVER_QUERY_LIMIT' === $json->status) {
-            return sprintf('Daily quota exceeded %s', $query);
-        }
-
-        return $content;
+        throw new Exception("Error Processing Request: " . __METHOD__;
     }
 
     protected function getContent($query)
