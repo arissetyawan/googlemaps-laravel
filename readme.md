@@ -11,7 +11,7 @@ I hear you saying, **"why should I use this when I can use the popular [**Geocod
 
 Short answer: It is **not good** for geocoding non-US properties. If you don't believe me, check its source. If they change this in the future, let me know.
 
-This library gives you the closest match Google returns, does not rename keys, and leaves no location properties out. It only rearranges the response structure to make it easier to work with.
+This library gives you the **closest match Google returns**, does **not rename keys**, and **leaves no location properties out**. It only rearranges the response structure to make it easier to work with.
 
 ```php
 array (size=8)
@@ -90,6 +90,25 @@ Find the `aliases` key in `app/config/app.php` and register the **Geocoder Facad
 )
 ```
 
+Configuration
+-------------
+
+Publish and edit the configuration file
+
+```bash
+    php artisan config:publish anthonyvipond/googlemaps-laravel
+```
+
+```php
+return [
+    'provider'    => 'GoogleMapsForBusiness', // or 'GoogleMaps' for free accounts
+    'adapter'     => 'CurlHttpAdapter',
+    'ssl'         => true,
+    'client-id'   => 'google-client-id',
+    'private-key' => 'google-private-key',
+];
+```
+
 Usage
 -----
 
@@ -103,7 +122,6 @@ Reverse geocoding
 ```php
     $coords = '+40.689060,-74.044636';
     $geocode = GoogleMaps::geocode($coords);
-
     var_dump($geocode);
 ```
 
@@ -127,29 +145,9 @@ $filters = [
     'country' => 'CA', // country name or a two letter ISO 3166-1 country code.
 ];
 
-// Parameters can be specified either in the address parameter or as a component filter, but **not both**.
+// Parameters can be specified in the address parameter or as a filter, but not both!
 $results = GoogleMaps::geocode('McDonalds', $filters);
 ```
-
-Configuration
--------------
-
-Publish and edit the configuration file
-
-```bash
-    php artisan config:publish anthonyvipond/googlemaps-laravel
-```
-
-```php
-return [
-    'provider'    => 'GoogleMapsForBusiness', // or 'GoogleMaps' for free accounts
-    'adapter'     => 'CurlHttpAdapter',
-    'ssl'         => true,
-    'client-id'   => 'google-client-id',
-    'private-key' => 'google-private-key',
-];
-```
-
 
 Support
 -------
