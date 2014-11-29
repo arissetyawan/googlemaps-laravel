@@ -34,8 +34,9 @@ class GoogleMapsServiceProvider extends ServiceProvider {
             $ssl        = $app['config']->get('googlemaps-laravel::ssl');
             $clientId   = $app['config']->get('googlemaps-laravel::client-id');
             $privateKey = $app['config']->get('googlemaps-laravel::private-key');
+            $language   = $app['config']->get('googlemaps-laravel::language');
 
-            return new $provider($adapter, $ssl, $clientId, $privateKey);
+            return new $provider($adapter, $ssl, $clientId, $privateKey, $language);
         });
 	}
 

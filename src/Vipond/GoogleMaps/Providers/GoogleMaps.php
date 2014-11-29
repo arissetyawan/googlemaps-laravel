@@ -12,10 +12,11 @@ class GoogleMaps {
 
     protected $totalResults;
 
-    public function __construct($adapter, $ssl)
+    public function __construct($adapter, $ssl, $language = null)
     {
         $this->useSsl = $ssl;
         $this->adapter = new $adapter($ssl);
+        $this->language = $language;
         $this->location = new Location;
     }
 
@@ -28,9 +29,14 @@ class GoogleMaps {
     {
         $url = $this->useSsl ? self::ENDPOINT_URL : self::ENDPOINT_URL_SSL;
 
-        $query = $url . $query . '&client=' . $this->clientId;
+        $url .= $query;
 
-        return $this->signQuery($query);
+        $url .= $this->language ? '&language=' . $this->language : '';
+
+        $url .= '&client=' . $this->clientId;
+
+
+        return $this->signUrl($url);
     }
 
     /**
@@ -42,7 +48,7 @@ class GoogleMaps {
     {
         $components = $filters ? $this->getFilterString($filters) : null;
         
-        $query = $this->buildQuery(urlencode($query) . $components, $this->useSsl);
+        $query = $this->buildQuery(urlencode(trim($query)) . $components, $this->useSsl);
 
         $content = json_decode($this->getContent($query));
 

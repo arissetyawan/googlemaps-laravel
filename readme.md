@@ -106,6 +106,7 @@ return [
     'ssl'         => true,
     'client-id'   => 'google-client-id',
     'private-key' => 'google-private-key',
+    'language'    => 'en', // [see available](https://developers.google.com/maps/faq#languagesupport)
 ];
 ```
 
