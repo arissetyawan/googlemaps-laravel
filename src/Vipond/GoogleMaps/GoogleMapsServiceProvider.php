@@ -29,8 +29,8 @@ class GoogleMapsServiceProvider extends ServiceProvider {
 	public function register()
 	{
 		$this->app->singleton('vipond.googlemaps', function($app) {
-            $provider   = $app['config']->get('googlemaps-laravel::provider');
-            $adapter    = $app['config']->get('googlemaps-laravel::adapter');
+            $provider   = 'Vipond\GoogleMaps\Providers\\' . $app['config']->get('googlemaps-laravel::provider');
+            $adapter    = 'Vipond\GoogleMaps\Adapters\\' . $app['config']->get('googlemaps-laravel::adapter');
             $ssl        = $app['config']->get('googlemaps-laravel::ssl');
             $clientId   = $app['config']->get('googlemaps-laravel::client-id');
             $privateKey = $app['config']->get('googlemaps-laravel::private-key');

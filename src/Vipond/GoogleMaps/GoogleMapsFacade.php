@@ -13,6 +13,6 @@ class GoogleMapsFacade extends Facade
     */
     protected static function getFacadeAccessor()
     {
-        return 'googlemaps';
+        return 'vipond.googlemaps';
     }
 }
