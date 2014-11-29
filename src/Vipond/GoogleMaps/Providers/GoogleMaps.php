@@ -2,7 +2,6 @@
 
 namespace Vipond\GoogleMaps\Providers;
 
-use Vipond\Providers\ApiService;
 use Vipond\GoogleMaps\Entities\Location;
 
 class GoogleMaps {
@@ -10,6 +9,8 @@ class GoogleMaps {
     const ENDPOINT_URL = 'http://maps.googleapis.com/maps/api/geocode/json?address=';
 
     const ENDPOINT_URL_SSL = 'https://maps.googleapis.com/maps/api/geocode/json?address=';
+
+    protected $totalResults;
 
     public function __construct($adapter, $ssl)
     {
@@ -25,31 +26,25 @@ class GoogleMaps {
      */
     protected function buildQuery($query)
     {
-        if ( $this->useSsl ) {
-            $url = self::ENDPOINT_URL;
-        } else {
-            $url = self::ENDPOINT_URL_SSL;
-        }
+        $url = $this->useSsl ? self::ENDPOINT_URL : self::ENDPOINT_URL_SSL;
 
-        $query = $url . urlencode($query) . '&client=' . $this->clientId;
+        $query = $url . $query . '&client=' . $this->clientId;
 
-        $signedQuery = $this->signQuery($query);
-
-        return $signedQuery;
+        return $this->signQuery($query);
     }
 
     /**
      * @param string $location
      *
-     * @return string JSON results
+     * @return mixed
      */
-    public function geocode($location)
+    public function geocode($query, $filters = null)
     {
-        $query = $this->buildQuery($location, $this->useSsl);
+        $components = $filters ? $this->getFilterString($filters) : null;
+        
+        $query = $this->buildQuery(urlencode($query) . $components, $this->useSsl);
 
-        $content = $this->getContent($query);
-
-        $content = json_decode($content);
+        $content = json_decode($this->getContent($query));
 
         if ($content->status === 'OK') {
             return $this->formatResult($content->results[0]->address_components);
@@ -70,8 +65,6 @@ class GoogleMaps {
                 return sprintf('Invalid client ID / API Key %s', $query);
             }
         }
-
-        throw new Exception("Error Processing Request: " . __METHOD__);
     }
 
     protected function getContent($query)
@@ -89,13 +82,23 @@ class GoogleMaps {
                     $location[$prop]['long_name'] = $result->long_name;
                     $location[$prop]['short_name'] = $result->short_name;
                     break;
-                } else {
-                    return $results;
-                    throw new \Exception("Unknown property" . $prop);
                 }
+                
+                throw new \Exception("Unknown property: " . $prop);
             }
         }
     
         return $location;
+    }
+
+    protected function getFilterString($filters)
+    {
+        $filter = '';
+
+        foreach ($filters as $key => $value) {
+            $filter .= trim($key) . ':' . trim($value) . '|';
+        }
+
+        return '&components=' . rtrim($filter, '|');
     }
 }

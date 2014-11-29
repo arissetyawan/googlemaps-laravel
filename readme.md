@@ -14,7 +14,6 @@ Short answer: It is not good for using Google to geocode non-US properties. If y
 This library gives you the closest match Google returns, does not rename keys, and leaves no location properties out. It only rearranges the results slightly to make it easier to work with.
 
 ```php
-
 array (size=8)
   'subpremise' => 
     array (size=2)
@@ -94,6 +93,16 @@ Find the `aliases` key in `app/config/app.php` and register the **Geocoder Facad
 )
 ```
 
+Use filters to speed up roundtrip and not get unwanted results
+```php
+$filters = [
+    'country' => 'USA',
+    'locality' => 'Washington',
+];
+
+$results = GoogleMaps::geocode('160 Pine Street', $filters);
+```
+
 Configuration
 -------------
 
@@ -104,7 +113,6 @@ Publish and edit the configuration file
 ```
 
 ```php
-
 return [
     'provider'    => 'GoogleMapsForBusiness', // or 'GoogleMaps' for free accounts
     'adapter'     => 'CurlHttpAdapter',
@@ -119,14 +127,14 @@ Example with Facade
 -------------------
 
 ```php
-
-// ...
-try {
-    $geocode = GoogleMaps::geocode('#301, 610 Victoria Street, New Westminster, BC, Canada');
+    $geocode = GoogleMaps::geocode('The White House, Washington, DC');
     var_dump($geocode);
-} catch (\Exception $e) {
-    echo $e->getMessage();
-}
+
+    // or reverse geocode
+    $coords = '+40.689060,-74.044636';
+    $geocode = GoogleMaps::geocode($coords);
+
+    var_dump($geocode);
 ```
 
 
