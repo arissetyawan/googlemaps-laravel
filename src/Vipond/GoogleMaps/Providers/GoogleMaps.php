@@ -3,6 +3,7 @@
 namespace Vipond\GoogleMaps\Providers;
 
 use Vipond\Providers\ApiService;
+use Vipond\GoogleMaps\Entities\Location;
 
 class GoogleMaps {
     
@@ -14,6 +15,7 @@ class GoogleMaps {
     {
         $this->useSsl = $ssl;
         $this->adapter = new $adapter($ssl);
+        $this->location = new Location;
     }
 
     /**
@@ -49,8 +51,8 @@ class GoogleMaps {
 
         $content = json_decode($content);
 
-        if ($content->status == 'OK') {
-            return $content->results[0];
+        if ($content->status === 'OK') {
+            return $this->formatResult($content->results[0]->address_components);
         } else {
             if ( is_null($content) ) {
                 return sprintf('Could not execute query: %s', $query);
@@ -69,11 +71,31 @@ class GoogleMaps {
             }
         }
 
-        throw new Exception("Error Processing Request: " . __METHOD__;
+        throw new Exception("Error Processing Request: " . __METHOD__);
     }
 
     protected function getContent($query)
     {
         return $this->adapter->get($query);
+    }
+
+    protected function formatResult(array $results)
+    {
+        $location = [];
+
+        foreach ($results as $result) {
+            foreach ($result->types as $prop) {
+                if (property_exists($this->location, $prop)) {
+                    $location[$prop]['long_name'] = $result->long_name;
+                    $location[$prop]['short_name'] = $result->short_name;
+                    break;
+                } else {
+                    return $results;
+                    throw new \Exception("Unknown property" . $prop);
+                }
+            }
+        }
+    
+        return $location;
     }
 }

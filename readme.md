@@ -4,6 +4,51 @@ Google Maps Wrapper for Laravel 4
 This package is a Google Maps API wrapper
 for [**Laravel 4**](http://laravel.com/).
 
+Preface
+------------
+
+I hear you saying, "why should I use this when I can use the popular [**Geocoder**](https://github.com/geocoder-php/Geocoder) library?"
+
+Short answer: It is not good for using Google to geocode non-US properties. If you don't believe me, check its source.
+
+This library gives you the closest match Google returns, does not rename keys, and leaves no location properties out. It only rearranges the results slightly to make it easier to work with.
+
+```php
+
+array (size=8)
+  'subpremise' => 
+    array (size=2)
+      'long_name' => string '301' (length=3)
+      'short_name' => string '301' (length=3)
+  'street_number' => 
+    array (size=2)
+      'long_name' => string '610' (length=3)
+      'short_name' => string '610' (length=3)
+  'route' => 
+    array (size=2)
+      'long_name' => string 'Victoria Street' (length=15)
+      'short_name' => string 'Victoria St' (length=11)
+  'locality' => 
+    array (size=2)
+      'long_name' => string 'New Westminster' (length=15)
+      'short_name' => string 'New Westminster' (length=15)
+  'administrative_area_level_2' => 
+    array (size=2)
+      'long_name' => string 'Greater Vancouver' (length=17)
+      'short_name' => string 'Greater Vancouver' (length=17)
+  'administrative_area_level_1' => 
+    array (size=2)
+      'long_name' => string 'British Columbia' (length=16)
+      'short_name' => string 'BC' (length=2)
+  'country' => 
+    array (size=2)
+      'long_name' => string 'Canada' (length=6)
+      'short_name' => string 'CA' (length=2)
+  'postal_code' => 
+    array (size=2)
+      'long_name' => string 'V3L 1C5' (length=7)
+      'short_name' => string 'V3L 1C5' (length=7)
+```
 
 Installation
 ------------
