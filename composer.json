@@ -1,6 +1,8 @@
 {
-    "name": "anthonyvipond/google-maps",
+    "name": "anthonyvipond/googlemaps-laravel",
     "description": "Laravel 4 Wrapper for Google Maps",
+    "keywords"    : ["laravel", "google maps", "geocoding"],
+    "license"     : "MIT",
     "authors": [
         {
             "name": "Anthony Vipond",
