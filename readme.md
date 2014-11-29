@@ -154,7 +154,7 @@ $results = GoogleMaps::geocode('McDonalds', $filters);
 
 A complete `var_dump` for the White House, in **Spanish**
 
-```
+```php
 array (size=11)
   'point_of_interest' => 
     array (size=2)
