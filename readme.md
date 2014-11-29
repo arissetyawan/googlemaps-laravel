@@ -7,11 +7,11 @@ for [**Laravel 4**](http://laravel.com/).
 Preface
 ------------
 
-I hear you saying, "why should I use this when I can use the popular [**Geocoder**](https://github.com/geocoder-php/Geocoder) library?"
+I hear you saying, **"why should I use this when I can use the popular [**Geocoder**](https://github.com/geocoder-php/Geocoder) library?"**
 
-Short answer: It is not good for using Google to geocode non-US properties. If you don't believe me, check its source.
+Short answer: It is **not good** for geocoding non-US properties. If you don't believe me, check its source. If they change this in the future, let me know.
 
-This library gives you the closest match Google returns, does not rename keys, and leaves no location properties out. It only rearranges the results slightly to make it easier to work with.
+This library gives you the closest match Google returns, does not rename keys, and leaves no location properties out. It only rearranges the response structure to make it easier to work with.
 
 ```php
 array (size=8)
@@ -70,9 +70,6 @@ And install dependencies:
     composer install
 ```
 
-Usage
------
-
 Find the `providers` key in `app/config/app.php` and register the **GoogleMaps Service Provider**.
 
 ```php
@@ -89,11 +86,28 @@ Find the `aliases` key in `app/config/app.php` and register the **Geocoder Facad
 'aliases' => array(
     // ...
 
-    'GoogleMaps' => 'Vipond\GoogleMaps\GoogleMapsFacade',
+    'GoogleMaps' => 'Vipond\GoogleMaps\GoogleMapsFacade', // don't like this alias? change it.
 )
 ```
 
-Use filters to speed up roundtrip and not get unwanted results
+Usage
+-----
+
+Geocoding an address
+```php
+    $geocode = GoogleMaps::geocode('The White House, Washington, DC');
+    var_dump($geocode);
+```
+
+Reverse geocoding
+```php
+    $coords = '+40.689060,-74.044636';
+    $geocode = GoogleMaps::geocode($coords);
+
+    var_dump($geocode);
+```
+
+Use filters to speed up the request and not get unwanted results
 ```php
 $filters = [
     'country' => 'USA',
@@ -101,6 +115,20 @@ $filters = [
 ];
 
 $results = GoogleMaps::geocode('160 Pine Street', $filters);
+```
+
+All available geocoding filters
+```php
+$filters = [
+    'route' => 'Robson Street', // i.e. Robson Street **NOT** 576 Robson Street
+    'locality' => 'Vancouver', // a locality or sublocality
+    'administrative_area' => 'Greater Vancouver',
+    'postal_code' => 'V3M 0A5', // postal_code or postal_code_prefix (zipcodes, too)
+    'country' => 'CA', // country name or a two letter ISO 3166-1 country code.
+];
+
+// Parameters can be specified either in the address parameter or as a component filter, but **not both**.
+$results = GoogleMaps::geocode('McDonalds', $filters);
 ```
 
 Configuration
@@ -120,21 +148,6 @@ return [
     'client-id'   => 'google-client-id',
     'private-key' => 'google-private-key',
 ];
-```
-
-
-Example with Facade
--------------------
-
-```php
-    $geocode = GoogleMaps::geocode('The White House, Washington, DC');
-    var_dump($geocode);
-
-    // or reverse geocode
-    $coords = '+40.689060,-74.044636';
-    $geocode = GoogleMaps::geocode($coords);
-
-    var_dump($geocode);
 ```
 
 
