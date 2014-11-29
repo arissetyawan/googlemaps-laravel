@@ -15,8 +15,7 @@ class GoogleMapsForBusiness extends GoogleMaps {
     }
 
     /**
-     * Sign a URL with a given crypto key
-     * This URL must be properly URL-encoded
+     * Sign a URL with a given crypto key. This URL must be properly URL-encoded.
      *
      * @param string $url Url to be signed
      *

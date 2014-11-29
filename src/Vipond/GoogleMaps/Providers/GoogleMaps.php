@@ -53,7 +53,7 @@ class GoogleMaps {
         $content = json_decode($this->getContent($query));
 
         if ($content->status === 'OK') {
-            return $this->formatResult($content->results[0]->address_components);
+            $location = $this->formatAddress($content->results[0]->address_components);
         } else {
             if ( is_null($content) ) {
                 return sprintf('Could not execute query: %s', $query);
@@ -71,6 +71,26 @@ class GoogleMaps {
                 return sprintf('Invalid client ID / API Key %s', $query);
             }
         }
+
+        $location['formatted_address']  = $content->results[0]->formatted_address ?: null;
+
+        $location['lat']  = $content->results[0]->geometry->location->lat ?: null;
+        $location['long'] = $content->results[0]->geometry->location->lng ?: null;
+
+        if (property_exists($content->results[0]->geometry, 'bounds')) {
+            $box = 'bounds';
+        } else {
+            $box = 'viewport';
+        }
+
+        $location[$box]['ne-lat']  = $content->results[0]->geometry->$box->northeast->lat;
+        $location[$box]['ne-long'] = $content->results[0]->geometry->$box->northeast->lng;
+        $location[$box]['sw-lat']  = $content->results[0]->geometry->$box->southwest->lat;
+        $location[$box]['sw-long'] = $content->results[0]->geometry->$box->southwest->lng;
+
+        $location['types'] = $content->results[0]->types;
+        
+        return $location;
     }
 
     protected function getContent($query)
@@ -78,7 +98,7 @@ class GoogleMaps {
         return $this->adapter->get($query);
     }
 
-    protected function formatResult(array $results)
+    protected function formatAddress(array $results)
     {
         $location = [];
 
@@ -107,4 +127,5 @@ class GoogleMaps {
 
         return '&components=' . rtrim($filter, '|');
     }
+
 }

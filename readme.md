@@ -106,9 +106,11 @@ return [
     'ssl'         => true,
     'client-id'   => 'google-client-id',
     'private-key' => 'google-private-key',
-    'language'    => 'en', // [see available](https://developers.google.com/maps/faq#languagesupport)
+    'language'    => 'en',
 ];
 ```
+
+Available languages can be found [over here](https://developers.google.com/maps/faq#languagesupport)
 
 Usage
 -----
@@ -148,6 +150,47 @@ $filters = [
 
 // Parameters can be specified in the address parameter or as a filter, but not both!
 $results = GoogleMaps::geocode('McDonalds', $filters);
+```
+
+A complete `var_dump` for the White House, in **Spanish**
+
+```
+array (size=11)
+  'point_of_interest' => 
+    array (size=2)
+      'long_name' => string 'The White House' (length=15)
+      'short_name' => string 'The White House' (length=15)
+  'street_number' => 
+    array (size=2)
+      'long_name' => string '1600' (length=4)
+      'short_name' => string '1600' (length=4)
+  'route' => 
+    array (size=2)
+      'long_name' => string 'Pennsylvania Avenue Northwest' (length=29)
+      'short_name' => string 'Pennsylvania Ave NW' (length=19)
+  'locality' => 
+    array (size=2)
+      'long_name' => string 'Washington, D.C.' (length=16)
+      'short_name' => string 'Washington, D.C.' (length=16)
+  'administrative_area_level_1' => 
+    array (size=2)
+      'long_name' => string 'District of Columbia' (length=20)
+      'short_name' => string 'DC' (length=2)
+  'country' => 
+    array (size=2)
+      'long_name' => string 'Estados Unidos' (length=14)
+      'short_name' => string 'US' (length=2)
+  'postal_code' => 
+    array (size=2)
+      'long_name' => string '20500' (length=5)
+      'short_name' => string '20500' (length=5)
+  'formatted_address' => string 'The White House, 1600 Pennsylvania Avenue Northwest, Washington, D.C., DC 20500, EE. UU.' (length=88)
+  'lat' => float 38.8976763
+  'long' => float -77.0365298
+  'types' => 
+    array (size=2)
+      0 => string 'point_of_interest' (length=17)
+      1 => string 'establishment' (length=13)
 ```
 
 Support
